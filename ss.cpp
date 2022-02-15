@@ -18,7 +18,7 @@ int nArrClient[10];
 void ProcessNewMessage(int nClientSocket)
 {
 	cout << endl << "Processing the Data for Client Socket :" << nClientSocket;
-	char buff[256 + 1] = { 0, };
+	char buff[256] = { 0};
 	int nRet = recv(nClientSocket, buff, 256, 0);
 	if (nRet < 0)
 	{
@@ -37,7 +37,9 @@ void ProcessNewMessage(int nClientSocket)
 	else
 	{
 		cout << endl << "The data Received From Client is:" << buff;
-		send(nClientSocket, "Data Fetched Successfully", 25, 0);
+		//string msg = "Data Fetched Successfully";
+		//char const* ptr = msg;
+		send(nClientSocket, "Data Fetched Successfully", 26, 0);
 		cout << endl << "********************************************************";
 
 
@@ -66,6 +68,7 @@ void ProcessNewRequest()
 			if (indx == 10)
 			{
 				cout << endl << "No space for a new client/connection";
+
 			}
 
 		}
