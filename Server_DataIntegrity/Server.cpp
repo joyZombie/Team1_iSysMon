@@ -44,10 +44,10 @@ void ProcessNewMessage(int nClientSocket)
 		int totRam;
 		int avRam;
 		float cpuL;
-		int prcArch;
+		//int prcArch;
 		int prcType;
 		int nOP;
-		int cpuIT;
+		//int cpuIT;
 		int chkS;
 
 		vector<parseData> data;
@@ -75,35 +75,38 @@ void ProcessNewMessage(int nClientSocket)
 			cpuL = atof(tempString.c_str());
 			tempString = "";
 
+#if 0
 			getline(inputString, tempString, ',');
 			cpuIT = atoi(tempString.c_str());
 			tempString = "";
+#endif
 
 			getline(inputString, tempString, ',');
 			nOP = atoi(tempString.c_str());
 			tempString = "";
 
+
 			getline(inputString, tempString, ',');
 			prcType = atoi(tempString.c_str());
 			tempString = "";
 
+			//Data Integrity Check
 			//retrieving checkSum
 			getline(inputString, tempString, ',');
 			chkS = atoi(tempString.c_str());
 			tempString = "";
 
-
-			parseData pD(hsN, usN, totRam, avRam, cpuL, cpuIT, nOP, prcType, chkS);
+			parseData pD(hsN, usN, totRam, avRam, cpuL, nOP, chkS, prcType); //cpuIT
 
 			cout << endl << "The data Received From Client is:" << endl;
 			pD.display();
-      
-      //Data Integrity check
+
 			//retrieving checksum at server side
 			int checkSum = pD.checkData();
 			if (chkS == checkSum) {
 				cout << "CheckSum at server side: " << checkSum << endl << "Data fetched is untampered";
 			}
+			else cout << "Data is tampered" << endl;
 			//for multiple data streams
 			data.push_back(pD);
 
