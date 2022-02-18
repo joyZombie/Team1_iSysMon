@@ -72,7 +72,7 @@ void main()
 
 			string str = obj.stringify();
 #endif
-			int i = 0;
+			
 #if 0
 			while (i != str.length())
 			{
@@ -80,9 +80,9 @@ void main()
 				i++;
 			}
 #endif
+			int i = 0;
 			//fetching data
 			string arr;
-			int securityKey = 97;
 			
 			storeData obj;
 			obj.fetchData();
@@ -96,7 +96,7 @@ void main()
 			int totRam;
 			int avRam;
 			float cpuL;
-			int cpuIT;
+			//int cpuIT;
 			int nOP;
 			int prcType;			
 
@@ -124,10 +124,11 @@ void main()
 				getline(inputString, tempString, ',');
 				cpuL = atof(tempString.c_str());
 				tempString = "";
-
+#if 0
 				getline(inputString, tempString, ',');
 				cpuIT = atoi(tempString.c_str());
 				tempString = "";
+#endif
 
 				getline(inputString, tempString, ',');
 				nOP = atoi(tempString.c_str());
@@ -138,7 +139,7 @@ void main()
 				tempString = "";
 				
 
-				parseData pD(hsN, usN, totRam, avRam, cpuL, cpuIT, nOP, prcType);
+				parseData pD(hsN, usN, totRam, avRam, cpuL, nOP, prcType); //cpuIT, prcType);
 
 				int checkSum = pD.checkData();
 				arr += to_string(checkSum);
@@ -229,3 +230,4 @@ void main()
 		}
 	}
 }
+
