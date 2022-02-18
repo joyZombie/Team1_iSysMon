@@ -18,17 +18,16 @@ void ProcessNewRequest();
 class parseData {
 public:
 
-    parseData(
-        string hsN,
+    parseData(string hsN,
         string usN,
         int totRam,
         int avRam,
         float cpuL,
-        int prcType,
         int nOP,
-        int cpuIT,
-        int chkSum
+        int chkSum,
+        int prcType
         )
+        //int cpuIT
     {
         hstName = hsN;
         usrName = usN;
@@ -37,7 +36,7 @@ public:
         cpuLd = cpuL;
         prcssType = prcType;
         noOfPrc = nOP;
-        cpuIdTime = cpuIT;
+        //cpuIdTime = cpuIT;
         checkS = chkSum;
     }
 
@@ -47,7 +46,7 @@ public:
         cout << "Total RAM: " << totlRam << " MB" << endl;
         cout << "Avlbl RAM: " << avlblRam << " MB" << endl;
         cout << "CPU Load: " << cpuLd << " %" << endl;
-        cout << "CPU Idle Time: " << cpuIdTime << " ms" << endl;
+        //cout << "CPU Idle Time: " << cpuIdTime << " ms" << endl;
         cout << "No. of Processors: " << noOfPrc << endl;
         cout << "Processor Type: " << prcssType << endl;
         cout << "CheckSum at client side: " << checkS << endl;
@@ -61,7 +60,7 @@ public:
         cS += (sizeof(totlRam) ^ key);
         cS += (sizeof(avlblRam) ^ key);
         cS += (sizeof(cpuLd) ^ key);
-        cS += (sizeof(cpuIdTime) ^ key);
+        //cS += (sizeof(cpuIdTime) ^ key);
         cS += (sizeof(noOfPrc) ^ key);
         cS += (sizeof(prcssType) ^ key);
         return cS;
@@ -72,9 +71,9 @@ public:
     int totlRam;
     int avlblRam;
     float cpuLd;
-    int prcssArch;
+    //int prcssArch;
     int prcssType;
     int noOfPrc;
-    int cpuIdTime;
+    //int cpuIdTime;
     int checkS;
 };
