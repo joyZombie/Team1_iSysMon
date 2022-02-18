@@ -7,6 +7,10 @@
 #include<Winsock2.h>
 #include<Windows.h>
 #include<vector>
+#include<chrono>
+#include <Lmcons.h>
+#include <thread>
+#include <functional>
 #pragma comment(lib, "Ws2_32.lib")
 using namespace std;
 
@@ -14,16 +18,21 @@ class storeData
 {
 private:
 
+    vector<string> v;
+
     string hostName;
     string userName;
     int totalRam;
     int availRam;
     float cpuLoad;
-    int processorArchitecture;
+    int cpuIdleTime;
+    string processorArchitecture;
     int processorType;
     int noOfProcessors;
-    int cpuIdleTime;
+    string timeStamp;
 
+
+    // Functions
     string getHostName();
     int getTotalRAM();
     int getAvailRAM();
@@ -34,10 +43,14 @@ private:
     int getProcessorType();
     int getNoOfProcessors();
     int getCpuIdleTime();
+    string getCurrentTime();
+    void timer_start();
+
 
 public:
 
+    string fetchNewData();
+    void intialiseThread();
     void fetchData();
     string stringify();
-    void writeInFile();
 };

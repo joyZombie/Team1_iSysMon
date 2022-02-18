@@ -1,30 +1,30 @@
 #include"systemInteraction.h"
+
 static float CalculateCPULoad(unsigned long long idleTicks, unsigned long long totalTicks)
 {
     static unsigned long long _previousTotalTicks = 0;
     static unsigned long long _previousIdleTicks = 0;
 
-
-
     unsigned long long totalTicksSinceLastTime = totalTicks - _previousTotalTicks;
     unsigned long long idleTicksSinceLastTime = idleTicks - _previousIdleTicks;
 
-
-
     float ret = 1.0f - ((totalTicksSinceLastTime > 0) ? ((float)idleTicksSinceLastTime) / totalTicksSinceLastTime : 0);
-
-
-
     _previousTotalTicks = totalTicks;
     _previousIdleTicks = idleTicks;
     return ret;
 }
-
-
-
 static unsigned long long FileTimeToInt64(const FILETIME& ft) { return (((unsigned long long)(ft.dwHighDateTime)) << 32) | ((unsigned long long)ft.dwLowDateTime); }
 
 
+string storeData::getCurrentTime()
+{
+    auto start = std::chrono::system_clock::now();
+    auto legacyStart = std::chrono::system_clock::to_time_t(start);
+    char tmBuff[30];
+    ctime_s(tmBuff, sizeof(tmBuff), &legacyStart);
+
+    return tmBuff;
+}
 string storeData::getHostName()
 {
 
@@ -104,7 +104,6 @@ int storeData::getCpuIdleTime()
     LASTINPUTINFO li = { 0 };
     li.cbSize = sizeof(LASTINPUTINFO);
 
-    //This function contains the time of last input event was received
     GetLastInputInfo(&li);
 
     return GetTickCount64() - li.dwTime;
@@ -112,33 +111,43 @@ int storeData::getCpuIdleTime()
 void storeData::fetchData()
 {
     hostName = getHostName();
-    //cout << "Hostname is " << hostName << endl;
 
     userName = getUserName();
-    // cout << "Username is " << userName << endl;
 
     totalRam = getTotalRAM();
-    //cout << "Total RAM is " << totalRam<< " MB" << endl;
 
     availRam = getAvailRAM();
-    //cout << "Total Available RAM is " << availRam<<" MB" << endl;
 
     cpuLoad = GetCPULoad();
-    //  cout << "CPU Load is " << cpuLoad << " %" << endl;
 
-    processorArchitecture = getProcessorArchitecture();
-    //cout << "The processor architecture is " << processorArchitecture << endl;
+
+    int ret = getProcessorArchitecture();
+
+
+    if (ret == 0)
+        processorArchitecture = "x86";
+    else if (ret == 5)
+        processorArchitecture = "ARM";
+    else if (ret == 6)
+        processorArchitecture = "Intel Itanium-based";
+    else if (ret == 9)
+        processorArchitecture = "x64(AMD or Intel)";
+    else if (ret == 12)
+        processorArchitecture = "ARM64";
+    else
+        processorArchitecture = "Unknown";
 
     processorType = getProcessorType();
-    // cout << "Type of the Processor is " << processorType<<endl;
 
     noOfProcessors = getNoOfProcessors();
-    // cout << "Number of Processors Present " << noOfProcessors<<endl;
 
     cpuIdleTime = getCpuIdleTime();
+    timeStamp = getCurrentTime();
 }
 string storeData::stringify()
+
 {
+
     string str;
     str += (hostName)+", ";
     str += (userName)+", ";
@@ -146,19 +155,55 @@ string storeData::stringify()
     str += to_string(availRam) + "MB, ";
     str += to_string(cpuLoad) + "%, ";
     str += to_string(cpuIdleTime) + "ms, ";
+    str += processorArchitecture + ", ";
     str += to_string(noOfProcessors) + ", ";
     str += to_string(processorType) + ", ";
 
+    str += timeStamp;
     return str;
 }
 
-void storeData::writeInFile()
+void storeData::timer_start()
 {
+    while (true)
+    {
+        fetchData();
 
-    ofstream myFile("Stats.txt");
+        int count = 0;
 
-    //Writing into the file
-    myFile << stringify() << endl << endl;
-    myFile.close();
+        if (count < 1000)
+        {
+            v.push_back(stringify());
+            count++;
+        }
+        else
+        {
+            v.erase(v.begin());
+            v.push_back(stringify());
 
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));     //sleep the thread
+    }
+}
+void storeData::intialiseThread()
+{
+    v.resize(1000);
+    thread t1(&storeData::timer_start, this);
+
+    t1.detach();
+}
+string storeData::fetchNewData()
+{
+    static string str;
+    if (!v.empty())
+    {
+        str = v.back();
+        v.erase(v.end() - 1);
+        return str;
+    }
+    else
+    {
+        str = "NO DATA AVAILABLE";
+        return str;
+    }
 }

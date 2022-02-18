@@ -1,23 +1,20 @@
 #include"systemInteraction.h"
 #include <in6addr.h>
 using namespace std;
-
 int main()
 {
-    vector<string>arr;
-    int interval = 1000;
+    storeData obj;
+    obj.intialiseThread();
     int i = 0;
-    while (1 && i != 10)
+    // Sleep(2000);
+    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    while (i != 5)
     {
-        storeData obj;
-        obj.fetchData();
-        arr.push_back(obj.stringify());
+        string str = obj.fetchNewData();
+        cout << str << endl;
         i++;
-        Sleep(interval);
+        // Sleep(2000);
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
     }
-    for (int i = 0; i < arr.size(); i++)
-    {
-        cout << arr[i] << endl;
-    }
-    return 0;
 }
+
