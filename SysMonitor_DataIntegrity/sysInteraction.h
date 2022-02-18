@@ -56,16 +56,17 @@ public:
         int totRam,
         int avRam,
         float cpuL,
-        int cpuIT,
         int nOP,
-        int prcType        
-        ) {
+        int prcType
+        )
+        //int cpuIT     
+         {
         hstName = hsN;
         usrName = usN;
         totlRam = totRam;
         avlblRam = avRam;
         cpuLd = cpuL;
-        cpuIdTime = cpuIT;
+        //cpuIdTime = cpuIT;
         noOfPrc = nOP;
         prcssType = prcType;
     }
@@ -79,7 +80,7 @@ public:
         cS += (sizeof(totlRam) ^ key);
         cS += (sizeof(avlblRam) ^ key);
         cS += (sizeof(cpuLd) ^ key);
-        cS += (sizeof(cpuIdTime) ^ key);
+        //cS += (sizeof(cpuIdTime) ^ key);
         cS += (sizeof(noOfPrc) ^ key);
         cS += (sizeof(prcssType) ^ key);
         return cS;
@@ -90,7 +91,7 @@ public:
     int totlRam;
     int avlblRam;
     float cpuLd;
-    int cpuIdTime;
+    //int cpuIdTime;
     int noOfPrc;
     int prcssType;    
     
