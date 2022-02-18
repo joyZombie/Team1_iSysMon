@@ -89,18 +89,22 @@ int storeData::getProcessorArchitecture()
     GetSystemInfo(&sysInfo);
     return sysInfo.wProcessorArchitecture;
 }
+
 int storeData::getProcessorType()
 {
     SYSTEM_INFO sysInfo;
     GetSystemInfo(&sysInfo);
     return sysInfo.dwProcessorType;
 }
+
 int storeData::getNoOfProcessors()
 {
     SYSTEM_INFO sysInfo;
     GetSystemInfo(&sysInfo);
     return sysInfo.dwNumberOfProcessors;
 }
+
+#if 0
 int storeData::getCpuIdleTime()
 {
     LASTINPUTINFO li = { 0 };
@@ -111,6 +115,8 @@ int storeData::getCpuIdleTime()
 
     return GetTickCount64() - li.dwTime;
 }
+#endif
+
 void storeData::fetchData()
 {
     hostName = getHostName();
@@ -137,17 +143,17 @@ void storeData::fetchData()
     noOfProcessors = getNoOfProcessors();
     // cout << "Number of Processors Present " << noOfProcessors<<endl;
 
-    cpuIdleTime = getCpuIdleTime();
+    //cpuIdleTime = getCpuIdleTime();
 }
 string storeData::stringify()
 {
     string str;
     str += (hostName)+", ";
     str += (userName)+", ";
-    str += to_string(totalRam) + "MB, ";
-    str += to_string(availRam) + "MB, ";
-    str += to_string(cpuLoad) + "%, ";
-    str += to_string(cpuIdleTime) + "ms, ";
+    str += to_string(totalRam) + ", ";
+    str += to_string(availRam) + ", ";
+    str += to_string(cpuLoad) + ", ";
+    //str += to_string(cpuIdleTime) + ", ";
     str += to_string(noOfProcessors) + ", ";
     str += to_string(processorType) + ", ";
 
