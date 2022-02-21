@@ -11,6 +11,7 @@
 #include <Lmcons.h>
 #include <thread>
 #include <functional>
+#include <in6addr.h>
 #pragma comment(lib, "Ws2_32.lib")
 using namespace std;
 
@@ -18,12 +19,15 @@ class storeData
 {
 private:
 
-    vector<string> v;
+    //Data Members
 
+    vector<string> v;
     string hostName;
     string userName;
     int totalRam;
     int availRam;
+    int totalDiskSpace;
+    int freeDiskSpace;
     float cpuLoad;
     int cpuIdleTime;
     string processorArchitecture;
@@ -31,13 +35,13 @@ private:
     int noOfProcessors;
     string timeStamp;
 
+    //Member Functions
 
-    // Functions
     string getHostName();
     int getTotalRAM();
     int getAvailRAM();
+    void getHardDiskSpace();
     string getUserName();
-    uint32_t getTotalVirtualMemory();
     float GetCPULoad();
     int getProcessorArchitecture();
     int getProcessorType();
@@ -45,12 +49,11 @@ private:
     int getCpuIdleTime();
     string getCurrentTime();
     void timer_start();
-
+    string stringify();
+    void fetchData();
 
 public:
 
-    string fetchNewData();
     void intialiseThread();
-    void fetchData();
-    string stringify();
+    string fetchNewData();
 };
