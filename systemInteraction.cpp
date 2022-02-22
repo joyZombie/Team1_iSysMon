@@ -50,7 +50,7 @@ string storeData::getUserName()
     GetUserNameA(username, &username_len);
     return username;
 }
-int storeData::getTotalRAM()
+void storeData::getRamInformation()
 {
     int ret = 0;
 
@@ -59,45 +59,43 @@ int storeData::getTotalRAM()
     MEMORYSTATUSEX m;
     m.dwLength = sizeof(m);
     GlobalMemoryStatusEx(&m);
-    ret = (int)((m.ullTotalPhys >> 20));
 
-    return ret;
+    totalRam = (int)((m.ullTotalPhys >> 20));
+    availRam = (int)(m.ullAvailPhys >> 20);
+
 }
 
-int storeData::getAvailRAM()
-{
-    int ret = 0;
-    MEMORYSTATUSEX m;
-    m.dwLength = sizeof(m);
-    GlobalMemoryStatusEx(&m);
-    ret = (int)(m.ullAvailPhys >> 20);
-    return ret;
-}
-
-float storeData::GetCPULoad()
+float storeData::getCpuLoad()
 {
     FILETIME idleTime, kernelTime, userTime;
     float cpuLoad = GetSystemTimes(&idleTime, &kernelTime, &userTime) ? CalculateCPULoad(FileTimeToInt64(idleTime), FileTimeToInt64(kernelTime) + FileTimeToInt64(userTime)) : -1.0f;
     return cpuLoad * 100;
 }
-int storeData::getProcessorArchitecture()
+void storeData::getProcessorInformation()
 {
     SYSTEM_INFO sysInfo;
     GetSystemInfo(&sysInfo);
-    return sysInfo.wProcessorArchitecture;
+
+    processorArchitecture = to_string(sysInfo.wProcessorArchitecture);
+    string ret = processorArchitecture;
+
+    if (ret == "0")
+        processorArchitecture = "x86";
+    else if (ret == "5")
+        processorArchitecture = "ARM";
+    else if (ret == "6")
+        processorArchitecture = "Intel Itanium-based";
+    else if (ret == "9")
+        processorArchitecture = "x64(AMD or Intel)";
+    else if (ret == "12")
+        processorArchitecture = "ARM64";
+    else
+        processorArchitecture = "Unknown";
+
+    processorType = sysInfo.dwProcessorType;
+    noOfProcessors = sysInfo.dwNumberOfProcessors;
 }
-int storeData::getProcessorType()
-{
-    SYSTEM_INFO sysInfo;
-    GetSystemInfo(&sysInfo);
-    return sysInfo.dwProcessorType;
-}
-int storeData::getNoOfProcessors()
-{
-    SYSTEM_INFO sysInfo;
-    GetSystemInfo(&sysInfo);
-    return sysInfo.dwNumberOfProcessors;
-}
+
 int storeData::getCpuIdleTime()
 {
     LASTINPUTINFO li = { 0 };
@@ -108,7 +106,7 @@ int storeData::getCpuIdleTime()
     return GetTickCount64() - li.dwTime;
 }
 
-void storeData::getHardDiskSpace()
+void storeData::getDiskSpace()
 {
     BOOL fResult;
     unsigned __int64 i64FreeBytesToCaller,
@@ -131,34 +129,16 @@ void storeData::fetchData()
 
     userName = getUserName();
 
-    totalRam = getTotalRAM();
+    getRamInformation();
 
-    availRam = getAvailRAM();
+    getDiskSpace();
 
-    getHardDiskSpace();
+    cpuLoad = getCpuLoad();
 
-    cpuLoad = GetCPULoad();
-
-    int ret = getProcessorArchitecture();
-
-    if (ret == 0)
-        processorArchitecture = "x86";
-    else if (ret == 5)
-        processorArchitecture = "ARM";
-    else if (ret == 6)
-        processorArchitecture = "Intel Itanium-based";
-    else if (ret == 9)
-        processorArchitecture = "x64(AMD or Intel)";
-    else if (ret == 12)
-        processorArchitecture = "ARM64";
-    else
-        processorArchitecture = "Unknown";
-
-    processorType = getProcessorType();
-
-    noOfProcessors = getNoOfProcessors();
+    getProcessorInformation();
 
     cpuIdleTime = getCpuIdleTime();
+
     timeStamp = getCurrentTime();
 }
 string storeData::stringify()
@@ -178,7 +158,7 @@ string storeData::stringify()
     str += timeStamp;
     return str;
 }
-void storeData::timer_start()
+void storeData::timerStart()
 {
     while (true)
     {
@@ -202,7 +182,7 @@ void storeData::timer_start()
 void storeData::intialiseThread()
 {
     v.resize(1000);
-    thread t1(&storeData::timer_start, this);
+    thread t1(&storeData::timerStart, this);
     t1.detach();
 }
 string storeData::fetchNewData()

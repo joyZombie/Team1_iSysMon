@@ -38,17 +38,14 @@ private:
     //Member Functions
 
     string getHostName();
-    int getTotalRAM();
-    int getAvailRAM();
-    void getHardDiskSpace();
+    void getRamInformation();
+    void getDiskSpace();
     string getUserName();
-    float GetCPULoad();
-    int getProcessorArchitecture();
-    int getProcessorType();
-    int getNoOfProcessors();
+    float getCpuLoad();
+    void getProcessorInformation();
     int getCpuIdleTime();
     string getCurrentTime();
-    void timer_start();
+    void timerStart();
     string stringify();
     void fetchData();
 
