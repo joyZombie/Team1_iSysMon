@@ -48,11 +48,17 @@ void insert(MYSQL* conn, vector<string>& db)
 	cpuLoad = stof(db[8]);
 
 	//cout << cpuLoad << endl;
+#if 0
 	cpuIdleTime = stoi(db[9]);
 	processorArchitecture = db[10];
 	processorType = stoi(db[11]);
 	noOfProcessors = stoi(db[12]);
 	timeStamp = db[13];
+#endif
+	processorArchitecture = db[9];
+	processorType = stoi(db[10]);
+	noOfProcessors = stoi(db[11]);
+	timeStamp = db[12];
 	//cout << timeStamp << endl;
 	/*	cout << " Enter your SocketID " << endl;
 		cin >> socketID;
@@ -78,7 +84,7 @@ void insert(MYSQL* conn, vector<string>& db)
 		cin >> timeStamp;
 		*/
 
-	ss << " INSERT INTO sysmonitor (socketID,clientUid, hostname, username, totalRam, availRam, totalDiskSpace,freeDiskSpace,cpuLoad, cpuIdleTime, processorArchitecture, processorType, noOfProcessors, timeStamp) values ('" << socketID << "','" << clientUid << "','" << hostname << "','" << username << " ','" << totalRam << "','" << availRam << "','" << totalDiskSpace << "','" << freeDiskSpace << "','" << cpuLoad << "','" << cpuIdleTime << "','" << processorArchitecture << "','" << processorType << "','" << noOfProcessors << "','" << timeStamp << "')";
+	ss << " INSERT INTO sysmonitor (socketID,clientUid, hostname, username, totalRam, availRam, totalDiskSpace, freeDiskSpace, cpuLoad, processorArchitecture, processorType, noOfProcessors, timeStamp) values ('" << socketID << "','" << clientUid << "','" << hostname << "','" << username << " ','" << totalRam << "','" << availRam << "','" << totalDiskSpace << "','" << freeDiskSpace << "','" << cpuLoad << "','" << processorArchitecture << "','" << processorType << "','" << noOfProcessors << "','" << timeStamp << "')"; //, cpuIdleTime, << cpuIdleTime << "','" 
 
 	string query = ss.str();
 	const char* q = query.c_str();
@@ -144,7 +150,7 @@ void ProcessNewMessage(int nClientSocket, MYSQL* conn)
 	}
 	else
 	{
-		//cout << endl << "The data Received From Client is:"<<buff;
+		cout << endl << "The data Received From Client is: "<< buff << endl;
 		if (buff[0] == '1')
 		{
 
@@ -202,15 +208,17 @@ void ProcessNewMessage(int nClientSocket, MYSQL* conn)
 			int totDiskSp;
 			int freeDiskSp;
 			float cpuL;
-			int cpuIT;
+			//int cpuIT;
 			string prcArch;
 			int nOP;
 			int prcType;
 			string timeStmp;
-			int chkS = 0;
 
+			int chkS = 0;
 			int checkSum = 0;
-			vector<parseData> data;
+
+			//vector<parseData> data;
+
 			stringstream storeString(buff);
 			string tempString;
 
@@ -249,10 +257,11 @@ void ProcessNewMessage(int nClientSocket, MYSQL* conn)
 				getline(inputString, tempString, ',');
 				cpuL = atof(tempString.c_str());
 				tempString = "";
-
+#if 0
 				getline(inputString, tempString, ',');
 				cpuIT = atoi(tempString.c_str());
 				tempString = "";
+#endif
 
 
 				getline(inputString, prcArch, ',');
@@ -267,7 +276,7 @@ void ProcessNewMessage(int nClientSocket, MYSQL* conn)
 
 				getline(inputString, timeStmp, ',');
 
-				parseData pD(cuid, hsN, usN, totRam, avRam, totDiskSp, freeDiskSp, cpuL, cpuIT, prcArch, nOP, prcType, timeStmp, chkS);
+				parseData pD(cuid, hsN, usN, totRam, avRam, totDiskSp, freeDiskSp, cpuL, prcArch, nOP, prcType, timeStmp, chkS); //, cpuIT
 
 				checkSum = pD.checkData();
 
@@ -329,10 +338,10 @@ void ProcessNewMessage(int nClientSocket, MYSQL* conn)
 				db.push_back(FDS);
 				getline(inputString, CL, ',');
 				db.push_back(CL);
-
+#if 0
 				getline(inputString, CIT, ',');
 				db.push_back(CIT);
-
+#endif
 				getline(inputString, PA, ',');
 				db.push_back(PA);
 				getline(inputString, NOP, ',');
