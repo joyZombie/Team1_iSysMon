@@ -74,7 +74,7 @@ public:
         int tDskSpce,
         int fDskSpce,
         float cpuL,
-        int cpuIT,
+        //int cpuIT,
         string prcArch,
         int nOP,
         int prcType,
@@ -89,7 +89,7 @@ public:
         totlDiskSpace = tDskSpce;
         freeDiskSpace = fDskSpce;
         cpuLd = cpuL;
-        cpuIdTime = cpuIT;
+        //cpuIdTime = cpuIT;
         prcssArcht = prcArch;
         noOfPrc = nOP;
         prcssType = prcType;
@@ -115,20 +115,24 @@ public:
             cS = temp ^ cS;
         }
         temp = 0;
-
         for (int i = 0; i < usrName.length(); i++)
         {
             temp = '|' - usrName[i];
             cS = temp ^ cS;
         }
         temp = 0;
-
         cS += totlRam;
         cS += avlblRam;
         cS += totlDiskSpace;
         cS += freeDiskSpace;
         cS += cpuLd;
-        cS += cpuIdTime;
+#if 0
+        if (cpuIdTime != 0)
+        {
+            cS += cpuIdTime;
+            cout << "9: " << cS << endl;
+        }
+#endif
 
         for (int i = 0; i < prcssArcht.length(); i++)
         {
@@ -136,7 +140,6 @@ public:
             cS = temp ^ cS;
         }
         temp = 0;
-
         cS += noOfPrc;
         cS += prcssType;
 
@@ -148,7 +151,6 @@ public:
         temp = 0;
 
         return cS;
-
     }
 
 
@@ -186,27 +188,6 @@ public:
     }
 #endif
 
-#if 0
-    int checkData() {
-
-        int key = 101;
-        int cS = 0;
-        cS += (sizeof(hstName) ^ key);
-        cS += (sizeof(usrName) ^ key);
-        cS += (sizeof(totlRam) ^ key);
-        cS += (sizeof(avlblRam) ^ key);
-        cS += (sizeof(totlDiskSpace) ^ key);
-        cS += (sizeof(freeDiskSpace) ^ key);
-        cS += (sizeof(cpuLd) ^ key);
-        cS += (sizeof(cpuIdTime) ^ key);
-        cS += (sizeof(prcssArcht) ^ key);
-        cS += (sizeof(noOfPrc) ^ key);
-        cS += (sizeof(prcssType) ^ key);
-        cS += (sizeof(timeStmp) ^ key);
-        return cS;
-    }
-#endif
-
     string cliUid;
     string hstName;
     string usrName;
@@ -215,7 +196,7 @@ public:
     int totlDiskSpace;
     int freeDiskSpace;
     float cpuLd;
-    int cpuIdTime;
+    //int cpuIdTime;
     string prcssArcht;
     int noOfPrc;
     int prcssType;
