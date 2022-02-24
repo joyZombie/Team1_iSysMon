@@ -1,79 +1,181 @@
-#include<stdio.h>
-#include<stdlib.h>
 #include<iostream>
-#include<string>
-#include<fstream>
-#include<sstream> 
-#include<Lmcons.h>
-#include<Winsock2.h>
-#include<Windows.h>
-#include<Ws2tcpip.h>
-#include<tchar.h>
+#include<winsock.h>
 #include<vector>
-using namespace std;
+#include<string>
+#include <Windows.h>
+#include <mysql.h>
+#include <iomanip>
+#include <stdlib.h>
+#include <fstream>
+#include <sstream>
+#include <stdio.h>
+#include<type_traits>
+#include<cstdint>
+#pragma comment(lib, "Ws2_32.lib")
 
-void ProcessNewMessage(int nClientSocket);
-void ProcessNewRequest();
+#define PORT 8080
+
+using namespace std;
 
 class parseData {
 public:
 
-    parseData(string hsN,
+    parseData(
+        string cuid,
+        string hsN,
         string usN,
         int totRam,
         int avRam,
+        int tDskSpce,
+        int fDskSpce,
         float cpuL,
+        int cpuIT,
+        string prcArch,
         int nOP,
-        int chkSum,
-        int prcType
-        )
-        //int cpuIT
+        int prcType,
+        string timstmp,
+        int chkS
+    )
     {
+        cliUid = cuid;
         hstName = hsN;
         usrName = usN;
         totlRam = totRam;
         avlblRam = avRam;
+        totlDiskSpace = tDskSpce;
+        freeDiskSpace = fDskSpce;
         cpuLd = cpuL;
-        prcssType = prcType;
+        cpuIdTime = cpuIT;
+        prcssArcht = prcArch;
         noOfPrc = nOP;
-        //cpuIdTime = cpuIT;
-        checkS = chkSum;
+        prcssType = prcType;
+        timeStmp = timstmp;
+        checkS = chkS;
     }
 
-    void display() {
-        cout << "HostName: " << hstName << endl;
-        cout << "UserName: " << usrName << endl;
-        cout << "Total RAM: " << totlRam << " MB" << endl;
-        cout << "Avlbl RAM: " << avlblRam << " MB" << endl;
-        cout << "CPU Load: " << cpuLd << " %" << endl;
-        //cout << "CPU Idle Time: " << cpuIdTime << " ms" << endl;
-        cout << "No. of Processors: " << noOfPrc << endl;
-        cout << "Processor Type: " << prcssType << endl;
-        cout << "CheckSum at client side: " << checkS << endl;
-    }
 
     int checkData() {
+
+        int cS = 0;
+        int temp = 0;
+
+        for (int i = 0; i < cliUid.length(); i++)
+        {
+            temp = '|' - cliUid[i];
+            cS = temp ^ cS;
+        }
+        temp = 0;
+
+        for (int i = 0; i < hstName.length(); i++)
+        {
+            temp = '|' - hstName[i];
+            cS = temp ^ cS;
+        }
+        temp = 0;
+
+        for (int i = 0; i < usrName.length(); i++)
+        {
+            temp = '|' - usrName[i];
+            cS = temp ^ cS;
+        }
+        temp = 0;
+
+        cS += totlRam;
+        cS += avlblRam;
+        cS += totlDiskSpace;
+        cS += freeDiskSpace;
+        cS += cpuLd;
+        cS += cpuIdTime;
+
+        for (int i = 0; i < prcssArcht.length(); i++)
+        {
+            temp = '|' - prcssArcht[i];
+            cS = temp ^ cS;
+        }
+        temp = 0;
+
+        cS += noOfPrc;
+        cS += prcssType;
+
+        for (int i = 0; i < timeStmp.length(); i++)
+        {
+            temp = '|' - timeStmp[i];
+            cS = temp ^ cS;
+        }
+        temp = 0;
+
+        return cS;
+
+    }
+
+
+#if 0
+    string checkData() {
+
+        int key = 10;
+        string cS = "";
+        for (int i = 0; i < hstName.length(); i++)
+        {
+            cS += hstName[i] + key;
+        }
+        for (int i = 0; i < usrName.length(); i++)
+        {
+            cS += usrName[i] + key;
+        }
+
+        cS += totlRam + key;
+        cS += avlblRam + key;
+        cS += totlDiskSpace + key;
+        cS += freeDiskSpace + key;
+        cS += cpuLd + key;
+        cS += cpuIdTime + key;
+        for (int i = 0; i < prcssArcht.length(); i++)
+        {
+            cS += prcssArcht[i] + key;
+        }
+        cS += noOfPrc + key;
+        cS += prcssType + key;
+        for (int i = 0; i < timeStmp.length(); i++)
+        {
+            cS += timeStmp[i] + key;
+        }
+        return cS;
+    }
+#endif
+
+#if 0
+    int checkData() {
+
         int key = 101;
         int cS = 0;
         cS += (sizeof(hstName) ^ key);
         cS += (sizeof(usrName) ^ key);
         cS += (sizeof(totlRam) ^ key);
         cS += (sizeof(avlblRam) ^ key);
+        cS += (sizeof(totlDiskSpace) ^ key);
+        cS += (sizeof(freeDiskSpace) ^ key);
         cS += (sizeof(cpuLd) ^ key);
-        //cS += (sizeof(cpuIdTime) ^ key);
+        cS += (sizeof(cpuIdTime) ^ key);
+        cS += (sizeof(prcssArcht) ^ key);
         cS += (sizeof(noOfPrc) ^ key);
         cS += (sizeof(prcssType) ^ key);
+        cS += (sizeof(timeStmp) ^ key);
         return cS;
     }
+#endif
 
+    string cliUid;
     string hstName;
     string usrName;
     int totlRam;
     int avlblRam;
+    int totlDiskSpace;
+    int freeDiskSpace;
     float cpuLd;
-    //int prcssArch;
-    int prcssType;
+    int cpuIdTime;
+    string prcssArcht;
     int noOfPrc;
-    //int cpuIdTime;
+    int prcssType;
+    string timeStmp;
     int checkS;
 };
