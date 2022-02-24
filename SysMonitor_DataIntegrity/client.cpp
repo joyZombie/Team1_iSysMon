@@ -1,7 +1,3 @@
-/*
-* ####IGNORE CODE BETWEEN "#if 0   #endif"
-*/
-
 #include"sysinteract.h"
 
 struct sockaddr_in srv;
@@ -26,13 +22,13 @@ void storeData::sendDataToServer(string uid)
 		int totDiskSp;
 		int freeDiskSp;
 		float cpuL;
-		int cpuIT;
+		//int cpuIT;
 		string prcArch;
 		int nOP;
 		int prcType;
 		string timeStmp;
 
-		int checkSum;
+		int checkSum = 0;
 
 		vector<parseData> data;
 		stringstream storeString(s);
@@ -68,10 +64,11 @@ void storeData::sendDataToServer(string uid)
 			getline(inputString, tempString, ',');
 			cpuL = atof(tempString.c_str());
 			tempString = "";
-
+#if 0
 			getline(inputString, tempString, ',');
 			cpuIT = atoi(tempString.c_str());
 			tempString = "";
+#endif
 
 			getline(inputString, prcArch, ',');
 
@@ -85,15 +82,7 @@ void storeData::sendDataToServer(string uid)
 
 			getline(inputString, timeStmp, ',');
 
-#if 0
-			//convert checkSum into string datatype
-			stringstream conv;
-			conv << checkSum;
-			conv >> chkSum;
-			//append checkSum at end of original data
-			arr.append(chkSum);
-#endif
-			parseData pD(cuid, hsN, usN, totRam, avRam, totDiskSp, freeDiskSp, cpuL, cpuIT, prcArch, nOP, prcType, timeStmp);
+			parseData pD(cuid, hsN, usN, totRam, avRam, totDiskSp, freeDiskSp, cpuL, prcArch, nOP, prcType, timeStmp); //, cpuIT
 
 			checkSum = pD.checkData();
 
@@ -102,13 +91,13 @@ void storeData::sendDataToServer(string uid)
 			//data.push_back(pD);
 
 			line = "";
-
-
 		}
 
 		s = to_string(checkSum) + "," + s;
+#if 0
 		cout << s << endl;
 		cout << "checksum appended: " << checkSum << endl;
+#endif
 
 		int x = 0;
 		for (; x < s.length(); x++)
@@ -210,4 +199,3 @@ int main()
 	}
 	return 0;
 }
-
