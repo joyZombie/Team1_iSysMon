@@ -126,7 +126,7 @@ void storeData::fetchData()
 
     getProcessorInformation();
 
-    cpuIdleTime = getCpuIdleTime();
+    //cpuIdleTime = getCpuIdleTime();
 
     timeStamp = getCurrentTime();
 }
@@ -140,7 +140,7 @@ string storeData::stringify()
     str += to_string(totalDiskSpace) + "GB, ";
     str += to_string(freeDiskSpace) + "GB, ";
     str += to_string(cpuLoad) + "%, ";
-    str += to_string(cpuIdleTime) + "ms, ";
+    //str += to_string(cpuIdleTime) + "ms, ";
     str += processorArchitecture + ", ";
     str += to_string(noOfProcessors) + ", ";
     str += to_string(processorType) + ", ";
