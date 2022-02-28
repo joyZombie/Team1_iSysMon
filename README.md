@@ -19,8 +19,10 @@ The user can access the system information by selecting the options from a menu 
 
 * RUN THE SERVER.EXE FILE
 * RUN THE CLIENT.EXE FILE
+* ENTER THE UNIQUE CLIENT IDENTIFIER.
 * SELECT THE OPTION FROM DISPLAY, ACCORDING TO THE DATA YOU WANT TO SEE.
-Now, You are ready to sneak thorugh some interesting system stats.
+
+Now, You are ready to sneak through some interesting system stats.
 
 #### PROJECT CONTRIBUTORS:-
 - ##### System Interaction Team
