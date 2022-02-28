@@ -1,4 +1,3 @@
-# Team1_iSysMon
 # SYS-MONITOR
 A central monitoring system built using basic client-server model to collect system information from multiple nodes over a network. This system information is being sent periodically to a server to update about its state with following parameters:
 
