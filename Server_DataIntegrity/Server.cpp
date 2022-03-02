@@ -44,52 +44,18 @@ void insert(MYSQL* conn, vector<string>& db)
 	availRam = stoi(db[5]);
 	totalDiskSpace = stoi(db[6]);
 	freeDiskSpace = stoi(db[7]);
-
 	cpuLoad = stof(db[8]);
-
-	//cout << cpuLoad << endl;
-#if 0
-	cpuIdleTime = stoi(db[9]);
-	processorArchitecture = db[10];
-	processorType = stoi(db[11]);
-	noOfProcessors = stoi(db[12]);
-	timeStamp = db[13];
-#endif
 	processorArchitecture = db[9];
 	processorType = stoi(db[10]);
 	noOfProcessors = stoi(db[11]);
 	timeStamp = db[12];
-	//cout << timeStamp << endl;
-	/*	cout << " Enter your SocketID " << endl;
-		cin >> socketID;
-		cout << " Enter your Host Name " << endl;
-		cin >> hostname;
-		cout << " Enter your Username " << endl;
-		cin >> username;
-		cout << " Enter your Total RAM " << endl;
-		cin >> totalRam;
-		cout << " Enter your Available RAM " << endl;
-		cin >> availRam;
-		cout << " Enter your CPU Load " << endl;
-		cin >> cpuLoad;
-		cout << " Enter your CPU IDLE Time " << endl;
-		cin >> cpuIdleTime;
-		cout << " Enter your Processor Architecture " << endl;
-		cin >> processorArchitecture;
-		cout << " Enter your Processor Type " << endl;
-		cin >> processorType;
-		cout << " Enter No of Processors" << endl;
-		cin >> noOfProcessors;
-		cout << " Enter Timestamp" << endl;
-		cin >> timeStamp;
-		*/
 
-	ss << " INSERT INTO sysmonitor (socketID,clientUid, hostname, username, totalRam, availRam, totalDiskSpace, freeDiskSpace, cpuLoad, processorArchitecture, processorType, noOfProcessors, timeStamp) values ('" << socketID << "','" << clientUid << "','" << hostname << "','" << username << " ','" << totalRam << "','" << availRam << "','" << totalDiskSpace << "','" << freeDiskSpace << "','" << cpuLoad << "','" << processorArchitecture << "','" << processorType << "','" << noOfProcessors << "','" << timeStamp << "')"; //, cpuIdleTime, << cpuIdleTime << "','" 
+	ss << " INSERT INTO sysmonitor (socketID,clientUid, hostname, username, totalRam, availRam, totalDiskSpace, freeDiskSpace, cpuLoad, processorArchitecture, processorType, noOfProcessors, timeStamp) values ('" << socketID << "','" << clientUid << "','" << hostname << "','" << username << " ','" << totalRam << "','" << availRam << "','" << totalDiskSpace << "','" << freeDiskSpace << "','" << cpuLoad << "','" << processorArchitecture << "','" << processorType << "','" << noOfProcessors << "','" << timeStamp << "')"; 
 
 	string query = ss.str();
 	const char* q = query.c_str();
 	qstate = mysql_query(conn, q);
-	//cout << endl<<qstate;
+
 
 	if (qstate == 0)
 	{
@@ -150,7 +116,7 @@ void ProcessNewMessage(int nClientSocket, MYSQL* conn)
 	}
 	else
 	{
-		cout << endl << "The data Received From Client is: "<< buff << endl;
+		//cout << endl << "The data Received From Client is: " << buff << endl;
 		if (buff[0] == '1')
 		{
 
@@ -175,12 +141,7 @@ void ProcessNewMessage(int nClientSocket, MYSQL* conn)
 				res = mysql_store_result(conn);
 				while (row = mysql_fetch_row(res))
 				{
-
 					s = s + "Socket ID: " + row[0] + "," + "Client UID: " + row[1] + "," + "Host Name: " + row[2] + "," + "Username: " + row[3] + "," + "Total RAM: " + row[4] + "," + "Available RAM: " + row[5] + "," + "Total Disk Space: " + row[6] + "," + "Free Disk Space: " + row[7] + "," + "CPU Load: " + row[8] + "," + "CPU IDLE Time: " + row[9] + "," + "Processor Architecture: " + row[10] + "," + "Processor Type: " + row[11] + "," + "No of Processors: " + row[12] + "," + "Timestamp: " + row[13];
-
-
-
-					//	printf("Socket ID: %s, Host Name: %s, Username: %s, Total RAM: %s, Available RAM : %s, CPU Load: %s, CPU IDLE Time: %s, Processor Architecture: %s, Processor Type: %s, No of Processors: %s, Timestamp: %s\n", row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]);
 				}
 			}
 
@@ -200,99 +161,64 @@ void ProcessNewMessage(int nClientSocket, MYSQL* conn)
 		else
 		{
 			//data integrity check at server side
-			string hsN;
-			string usN;
-			string cuid;
-			int totRam;
-			int avRam;
-			int totDiskSp;
-			int freeDiskSp;
-			float cpuL;
-			//int cpuIT;
-			string prcArch;
-			int nOP;
-			int prcType;
-			string timeStmp;
+			vector<string> chdb;
+			string tmp = "";
+			string sto = buff;
+			//cout << endl << "The data Received From Client is: " << sto << endl;
+			
+			for (int i = 0; i < sto.length()-1; i++)
+			{
+				if (buff[i] != ',')
+				{
+					tmp = tmp + buff[i];
+				}
+				else
+				{
+					chdb.push_back(tmp);
+					tmp = "";
+				}
+			}
+			chdb.push_back(tmp);
 
+			string hostname, clientUid, username, processorArchitecture, timeStamp;
+			int totalDiskSpace, freeDiskSpace, totalRam, availRam, processorType, noOfProcessors;
+			float cpuLoad;
 			int chkS = 0;
 			int checkSum = 0;
+			
+			chkS = stoi(chdb[0]);
+			clientUid = chdb[1];
+			hostname = chdb[2];
+			
+			username = chdb[3];
+			totalRam = stoi(chdb[4]);
+			
+			availRam = stoi(chdb[5]);
+			totalDiskSpace = stoi(chdb[6]);
 
-			//vector<parseData> data;
+			freeDiskSpace = stoi(chdb[7]);
+			cpuLoad = stof(chdb[8]);
 
-			stringstream storeString(buff);
-			string tempString;
+			processorArchitecture = chdb[9];
+			noOfProcessors = stoi(chdb[10]);
+			processorType = stoi(chdb[11]);
+			timeStamp = chdb[12];
 
-			string line = "";
+			parseData pD(clientUid, hostname, username, totalRam, availRam, totalDiskSpace, freeDiskSpace, cpuLoad, processorArchitecture, noOfProcessors, processorType, timeStamp, chkS);
 
-			while (getline(storeString, line)) {
-				stringstream inputString(line);
+			checkSum = pD.checkData();
 
-				//retrieving checkSum
-				getline(inputString, tempString, ',');
-				chkS = atoi(tempString.c_str());
-				tempString = "";
+			cout << cpuLoad << endl;
 
-				getline(inputString, cuid, ',');
+			//cout << "Client side checksum: " << chkS << endl;
+			//cout << "Server side checksum: " << checkSum << endl;
 
-				getline(inputString, hsN, ',');
-
-				getline(inputString, usN, ',');
-
-				getline(inputString, tempString, ',');
-				totRam = atoi(tempString.c_str());
-				tempString = "";
-
-				getline(inputString, tempString, ',');
-				avRam = atoi(tempString.c_str());
-				tempString = "";
-
-				getline(inputString, tempString, ',');
-				totDiskSp = atoi(tempString.c_str());
-				tempString = "";
-
-				getline(inputString, tempString, ',');
-				freeDiskSp = atoi(tempString.c_str());
-				tempString = "";
-
-				getline(inputString, tempString, ',');
-				cpuL = atof(tempString.c_str());
-				tempString = "";
-#if 0
-				getline(inputString, tempString, ',');
-				cpuIT = atoi(tempString.c_str());
-				tempString = "";
-#endif
-
-
-				getline(inputString, prcArch, ',');
-
-				getline(inputString, tempString, ',');
-				nOP = atoi(tempString.c_str());
-				tempString = "";
-
-				getline(inputString, tempString, ',');
-				prcType = atoi(tempString.c_str());
-				tempString = "";
-
-				getline(inputString, timeStmp, ',');
-
-				parseData pD(cuid, hsN, usN, totRam, avRam, totDiskSp, freeDiskSp, cpuL, prcArch, nOP, prcType, timeStmp, chkS); //, cpuIT
-
-				checkSum = pD.checkData();
-
-				//for multiple data streams
-				//data.push_back(pD);
-
-				line = "";
-
-			}
-			cout << "Client side checksum: " << chkS << endl;
-			cout << "Server side checksum: " << checkSum << endl;
-
-			if (chkS == checkSum) {
+			if (chkS == checkSum)
 				cout << "Data fetched is untampered" << endl;
-			}
-			else cout << "Data is tampered" << endl;
+			else
+				cout << "Data is tampered" << endl;
+
+			////////////////////////////////
 
 			string cid;
 			string HN;
@@ -338,10 +264,6 @@ void ProcessNewMessage(int nClientSocket, MYSQL* conn)
 				db.push_back(FDS);
 				getline(inputString, CL, ',');
 				db.push_back(CL);
-#if 0
-				getline(inputString, CIT, ',');
-				db.push_back(CIT);
-#endif
 				getline(inputString, PA, ',');
 				db.push_back(PA);
 				getline(inputString, NOP, ',');
@@ -353,42 +275,8 @@ void ProcessNewMessage(int nClientSocket, MYSQL* conn)
 
 				line1 = "";
 			}
-#if 0
-			vector<string> db;
-			string socketid = to_string(nClientSocket);
-			db.push_back(socketid);
-			string tmp = "";
-			for (int i = 0; i < 255; i++)
-			{
-				if (buff[i] == '~')
-				{
-					break;
-				}
-
-				if (buff[i] != ',')
-				{
-					tmp = tmp + buff[i];
-
-				}
-				else
-				{
-					db.push_back(tmp);
-					tmp = "";
-				}
-
-			}
-			db.push_back(tmp);
-#endif
-			/*
-					for (int j = 0; j < db.size(); j++)
-					{
-						cout << endl << db[j];
-						cout << endl << "*******************";
 
 
-					}
-			*/
-			
 			if (conn) {
 
 				puts("Successful connection to database!");
@@ -400,15 +288,7 @@ void ProcessNewMessage(int nClientSocket, MYSQL* conn)
 			else {
 				puts("Connection to database has failed!");
 			}
-
-
-			//string msg = "Data Fetched Successfully";
-			//char const* ptr = msg;
-			//send(nClientSocket, "Data Fetched Successfully", 26, 0);
-			//cout << endl << "********************************************************";
 		}
-
-
 	}
 }
 
