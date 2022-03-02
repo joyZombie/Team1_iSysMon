@@ -48,7 +48,6 @@ private:
     void getDiskSpace();
     float getCpuLoad();
     void getProcessorInformation();
-    int getCpuIdleTime();
     string getCurrentTime();
     void fetchData();
     string stringify();
@@ -63,6 +62,20 @@ public:
 };
 
 class parseData {
+
+    string cliUid;
+    string hstName;
+    string usrName;
+    int totlRam;
+    int avlblRam;
+    int totlDiskSpace;
+    int freeDiskSpace;
+    float cpuLd;
+    string prcssArcht;
+    int noOfPrc;
+    int prcssType;
+    string timeStmp;
+
 public:
 
     parseData(
@@ -74,7 +87,6 @@ public:
         int tDskSpce,
         int fDskSpce,
         float cpuL,
-        //int cpuIT,
         string prcArch,
         int nOP,
         int prcType,
@@ -89,7 +101,6 @@ public:
         totlDiskSpace = tDskSpce;
         freeDiskSpace = fDskSpce;
         cpuLd = cpuL;
-        //cpuIdTime = cpuIT;
         prcssArcht = prcArch;
         noOfPrc = nOP;
         prcssType = prcType;
@@ -115,24 +126,19 @@ public:
             cS = temp ^ cS;
         }
         temp = 0;
+
         for (int i = 0; i < usrName.length(); i++)
         {
             temp = '|' - usrName[i];
             cS = temp ^ cS;
         }
         temp = 0;
+
         cS += totlRam;
         cS += avlblRam;
         cS += totlDiskSpace;
         cS += freeDiskSpace;
         cS += cpuLd;
-#if 0
-        if (cpuIdTime != 0)
-        {
-            cS += cpuIdTime;
-            cout << "9: " << cS << endl;
-        }
-#endif
 
         for (int i = 0; i < prcssArcht.length(); i++)
         {
@@ -140,6 +146,7 @@ public:
             cS = temp ^ cS;
         }
         temp = 0;
+
         cS += noOfPrc;
         cS += prcssType;
 
@@ -152,53 +159,4 @@ public:
 
         return cS;
     }
-
-
-#if 0
-    string checkData() {
-
-        int key = 10;
-        string cS = "";
-        for (int i = 0; i < hstName.length(); i++)
-        {
-            cS += hstName[i] + key;
-        }
-        for (int i = 0; i < usrName.length(); i++)
-        {
-            cS += usrName[i] + key;
-        }
-
-        cS += totlRam + key;
-        cS += avlblRam + key;
-        cS += totlDiskSpace + key;
-        cS += freeDiskSpace + key;
-        cS += cpuLd + key;
-        cS += cpuIdTime + key;
-        for (int i = 0; i < prcssArcht.length(); i++)
-        {
-            cS += prcssArcht[i] + key;
-        }
-        cS += noOfPrc + key;
-        cS += prcssType + key;
-        for (int i = 0; i < timeStmp.length(); i++)
-        {
-            cS += timeStmp[i] + key;
-        }
-        return cS;
-    }
-#endif
-
-    string cliUid;
-    string hstName;
-    string usrName;
-    int totlRam;
-    int avlblRam;
-    int totlDiskSpace;
-    int freeDiskSpace;
-    float cpuLd;
-    //int cpuIdTime;
-    string prcssArcht;
-    int noOfPrc;
-    int prcssType;
-    string timeStmp;
 };
