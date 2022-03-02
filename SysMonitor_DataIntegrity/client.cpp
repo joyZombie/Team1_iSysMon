@@ -1,5 +1,4 @@
 #include"sysinteract.h"
-
 struct sockaddr_in srv;
 #define PORT 8080
 int nClientSocket;
@@ -14,97 +13,59 @@ void storeData::sendDataToServer(string uid)
 		string s = uid + "," + fetchNewData();
 
 		//Parsing data at client side
-		string cuid;
-		string hsN;
-		string usN;
-		int totRam;
-		int avRam;
-		int totDiskSp;
-		int freeDiskSp;
-		float cpuL;
-		//int cpuIT;
-		string prcArch;
-		int nOP;
-		int prcType;
-		string timeStmp;
+
+		vector<string> chdb;
+		string tmp = "";
+
+		for (int k = 0; k < s.length()-1; k++)
+		{
+			if (s[k] != ',')
+			{
+				tmp = tmp + s[k];
+			}
+			else
+			{
+				chdb.push_back(tmp);
+				tmp = "";
+			}
+		}
+		chdb.push_back(tmp);
+
+		string hostname, clientUid, username, processorArchitecture, timeStamp;
+		int totalDiskSpace, freeDiskSpace, totalRam, availRam, processorType, noOfProcessors;
+		float cpuLoad;
 
 		int checkSum = 0;
 
-		vector<parseData> data;
-		stringstream storeString(s);
-		string tempString;
+		clientUid = chdb[0];
+		hostname = chdb[1];
 
-		string line = "";
+		username = chdb[2];
+		totalRam = stoi(chdb[3]);
 
-		while (getline(storeString, line)) {
-			stringstream inputString(line);
+		availRam = stoi(chdb[4]);
+		totalDiskSpace = stoi(chdb[5]);
 
-			getline(inputString, cuid, ',');
+		freeDiskSpace = stoi(chdb[6]);
+		cpuLoad = stof(chdb[7]);
 
-			getline(inputString, hsN, ',');
+		processorArchitecture = chdb[8];
+		noOfProcessors = stoi(chdb[9]);
+		processorType = stoi(chdb[10]);
+		timeStamp = chdb[11];
 
-			getline(inputString, usN, ',');
+		parseData pD(clientUid, hostname, username, totalRam, availRam, totalDiskSpace, freeDiskSpace, cpuLoad, processorArchitecture, noOfProcessors, processorType, timeStamp);
 
-			getline(inputString, tempString, ',');
-			totRam = atoi(tempString.c_str());
-			tempString = "";
-
-			getline(inputString, tempString, ',');
-			avRam = atoi(tempString.c_str());
-			tempString = "";
-
-			getline(inputString, tempString, ',');
-			totDiskSp = atoi(tempString.c_str());
-			tempString = "";
-
-			getline(inputString, tempString, ',');
-			freeDiskSp = atoi(tempString.c_str());
-			tempString = "";
-
-			getline(inputString, tempString, ',');
-			cpuL = atof(tempString.c_str());
-			tempString = "";
-#if 0
-			getline(inputString, tempString, ',');
-			cpuIT = atoi(tempString.c_str());
-			tempString = "";
-#endif
-
-			getline(inputString, prcArch, ',');
-
-			getline(inputString, tempString, ',');
-			nOP = atoi(tempString.c_str());
-			tempString = "";
-
-			getline(inputString, tempString, ',');
-			prcType = atoi(tempString.c_str());
-			tempString = "";
-
-			getline(inputString, timeStmp, ',');
-
-			parseData pD(cuid, hsN, usN, totRam, avRam, totDiskSp, freeDiskSp, cpuL, prcArch, nOP, prcType, timeStmp); //, cpuIT
-
-			checkSum = pD.checkData();
-
-
-			//for multiple data streams
-			//data.push_back(pD);
-
-			line = "";
-		}
+		checkSum = pD.checkData();
 
 		s = to_string(checkSum) + "," + s;
-#if 0
-		cout << s << endl;
-		cout << "checksum appended: " << checkSum << endl;
-#endif
 
 		int x = 0;
 		for (; x < s.length(); x++)
 		{
 			buff[x] = s[x];
 		}
-		//buff[x] = '~';
+		//cout << "Data sent is: " << buff;
 		send(nClientSocket, buff, 5000, 0);
 	}
 }
