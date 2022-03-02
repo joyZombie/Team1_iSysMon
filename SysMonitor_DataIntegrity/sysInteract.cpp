@@ -64,7 +64,7 @@ float storeData::getCpuLoad()
 {
     FILETIME idleTime, kernelTime, userTime;
     float cpuLoad = GetSystemTimes(&idleTime, &kernelTime, &userTime) ? CalculateCPULoad(FileTimeToInt64(idleTime), FileTimeToInt64(kernelTime) + FileTimeToInt64(userTime)) : -1.0f;
-    return cpuLoad * 100;
+    return (cpuLoad * 100);
 }
 
 void storeData::getProcessorInformation()
@@ -92,16 +92,6 @@ void storeData::getProcessorInformation()
     noOfProcessors = sysInfo.dwNumberOfProcessors;
 }
 
-int storeData::getCpuIdleTime()
-{
-    LASTINPUTINFO li = { 0 };
-    li.cbSize = sizeof(LASTINPUTINFO);
-
-    GetLastInputInfo(&li);
-
-    return GetTickCount64() - li.dwTime;
-}
-
 string storeData::getCurrentTime()
 {
     auto start = std::chrono::system_clock::now();
@@ -126,25 +116,23 @@ void storeData::fetchData()
 
     getProcessorInformation();
 
-    //cpuIdleTime = getCpuIdleTime();
-
     timeStamp = getCurrentTime();
 }
 string storeData::stringify()
 {
     string str;
-    str += (hostName)+", ";
-    str += (userName)+", ";
-    str += to_string(totalRam) + "MB, ";
-    str += to_string(availRam) + "MB, ";
-    str += to_string(totalDiskSpace) + "GB, ";
-    str += to_string(freeDiskSpace) + "GB, ";
-    str += to_string(cpuLoad) + "%, ";
+    str += (hostName)+",";
+    str += (userName)+",";
+    str += to_string(totalRam) + "MB,";
+    str += to_string(availRam) + "MB,";
+    str += to_string(totalDiskSpace) + "GB,";
+    str += to_string(freeDiskSpace) + "GB,";
+    str += to_string(cpuLoad) + "%,";
     //str += to_string(cpuIdleTime) + "ms, ";
-    str += processorArchitecture + ", ";
-    str += to_string(noOfProcessors) + ", ";
-    str += to_string(processorType) + ", ";
-    str += timeStamp;
+    str += processorArchitecture + ",";
+    str += to_string(noOfProcessors) + ",";
+    str += to_string(processorType) + ",";
+    str += timeStamp + ",";
     return str;
 }
 
