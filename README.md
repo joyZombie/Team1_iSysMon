@@ -49,9 +49,9 @@ The user can access the system information by selecting the options from a menu 
 
    a. Copy libmysql.dll from C:\Program Files\MySQL\MySQL Server 8.0\lib to the executable directory ​
 
-   b. Copy libcrypto-1_1-x64.dll and libssl-1_1-x64.dll from C:\Program Files\MySQL\MySQL Server 8.0\bin ​
-
-       to the executable directory.
+   b. Copy libcrypto-1_1-x64.dll and libssl-1_1-x64.dll from C:\Program Files\MySQL\MySQL Server 8.0\bin 
+      to the executable directory.
+       
 
 ## STEPS TO USE:
 
