@@ -16,7 +16,7 @@ A central monitoring system built using basic client-server model to collect sys
 The user can access the system information by selecting the options from a menu driven program.
 
 
-### How to Establish the Database Connection
+### How to Establish the Database Connection??
 1. Download and install MySQL Installer ​
 
 2. Using MySQL Installer install: ​
