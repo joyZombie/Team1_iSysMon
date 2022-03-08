@@ -1,4 +1,4 @@
-#include"sysinteract.h"
+#include"systemInteraction.h"
 
 string storeData::getHostName()
 {
