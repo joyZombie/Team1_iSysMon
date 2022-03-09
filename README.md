@@ -60,7 +60,7 @@ The user can access the system information by selecting the options from a menu 
 * ENTER THE UNIQUE CLIENT IDENTIFIER.
 * SELECT THE OPTION FROM DISPLAY, ACCORDING TO THE DATA YOU WANT TO SEE.
 
-Now, You are ready to sneak through some interesting system stats.
+Now, You are ready to look at some interesting system stats.
 
 
 #### PROJECT CONTRIBUTORS:-
