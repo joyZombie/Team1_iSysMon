@@ -15,6 +15,8 @@ A central monitoring system built using basic client-server model to collect sys
 
 The user can access the system information by selecting the options from a menu driven program.
 
+Configuration files DATA SERVER_CONFIG.TXT CLIENT_CONFIG.TXT are also included to make the hard coded values configurable.
+
 
 ### How to Establish the Database Connection??
 1. Download and install MySQL Installer ​
@@ -51,7 +53,7 @@ The user can access the system information by selecting the options from a menu 
 
    b. Copy libcrypto-1_1-x64.dll and libssl-1_1-x64.dll from C:\Program Files\MySQL\MySQL Server 8.0\bin 
       to the executable directory.
-       
+      
 
 ## STEPS TO USE:
 
