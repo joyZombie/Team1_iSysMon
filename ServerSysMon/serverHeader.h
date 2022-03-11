@@ -13,9 +13,22 @@
 #include<cstdint>
 #pragma comment(lib, "Ws2_32.lib")
 
-#define PORT 8080
-
 using namespace std;
+
+class server {
+
+    int qstate;
+
+public:
+
+    void insert(MYSQL*, vector<string>&);                    // This function is used for deletion from the DB
+
+    void ProcessNewMessage(int, MYSQL*, int[]);             // function where data tranfer occurs
+
+    void ProcessNewRequest(MYSQL*, fd_set&, int, int[]);   //  This function is used only to accept new request from Clients no data tranfer
+
+    void deletedb(MYSQL*, string, int);                    // This function is used for insertion into the DB
+};
 
 class parseData {
 
@@ -119,4 +132,10 @@ public:
 
         return cS;
     }
+};
+
+class Config {
+public:
+    int PORT;
+    int memSize;
 };
